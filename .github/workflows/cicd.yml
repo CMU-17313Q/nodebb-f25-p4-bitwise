@@ -12,8 +12,11 @@ jobs:
     - name: SSH into GPU VM and run tests
       uses: appleboy/ssh-action@v1.2.1
       with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_ADMIN }}
+        host: crs-17313-bitwise-gpu.qatar.cmu.edu
+        username: bitwise
         password: ${{ secrets.ADMIN_PASSWORD }}
         script: |
-          sshpass -p '${{ secrets.ADMIN_PASSWORD }}' ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_ADMIN }}@${{ secrets.TRANSLATOR_IP }} "bash -l -c 'cd ${{ secrets.TRANSLATOR_REPO }} && git pull origin main && pip install -r requirements.txt && pytest -v'"
+          cd ${{ secrets.TRANSLATOR_REPO }}
+          git pull origin main
+          pip install -r requirements.txt
+          pytest -v
