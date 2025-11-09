@@ -19,11 +19,18 @@ from src.translator import translate_content, get_language, get_translation
 
 
 def test_chinese():
-    
-    is_english, translated_content = translate_content("这是一条中文消息")
-    assert is_english == False
-    assert len(translated_content) > 0
-
+    with patch('src.translator.client.chat') as mock_chat:
+        # Mock language detection to return "Chinese"
+        # Mock translation to return English text
+        mock_chat.side_effect = [
+            {'message': {'content': 'Chinese'}},
+            {'message': {'content': 'This is a Chinese message'}}
+        ]
+        
+        is_english, translated_content = translate_content("这是一条中文消息")
+        assert is_english == False
+        assert len(translated_content) > 0
+        assert translated_content == 'This is a Chinese message'
 
 def test_llm_normal_response():
     with patch('src.translator.client.chat') as mock_chat:
